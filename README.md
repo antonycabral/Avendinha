@@ -2,94 +2,53 @@
 
 ```mermaid
 classDiagram
-    class Usuario {
-        +String nome
+    class Market {
+        +Long id
+        +String name
         +String email
-        +String endereco
-        +Carrinho carrinho
-        +adicionarItem(Item item)
-        +removerItem(Item item)
-        +realizarPedido(FormaPagamento formaPagamento, FormaEntrega formaEntrega) : Pedido
+        +String password
+        +List~Item~ items
+        +List~Order~ orders
+    }
+
+    class Customer {
+        +Long id
+        +String name
+        +String email
+        +String password
+        +Cart cart
+        +List~Order~ orders
     }
 
     class Item {
-        +String nome
-        +double preco
-        +int quantidade
+        +Long id
+        +String name
+        +Double price
+        +Market market
     }
 
-    class Carrinho {
-        +List~Item~ itens
-        +double calcularTotal() : double
-        +adicionarItem(Item item)
-        +removerItem(Item item)
-        +List~Item~ getItens()
+    class Cart {
+        +Long id
+        +Customer customer
+        +List~Item~ items
+        +Double totalPrice
     }
 
-    class Pedido {
-        +Usuario usuario
-        +List~Item~ itens
-        +double total
-        +FormaPagamento formaPagamento
-        +FormaEntrega formaEntrega
+    class Order {
+        +Long id
+        +Customer customer
+        +List~Item~ items
+        +Double totalPrice
+        +String paymentMethod
+        +String deliveryMethod
+        +Market market
     }
 
-    class FormaPagamento {
-        <<interface>>
-        +processarPagamento(double valor)
-    }
+    Market "1" -- "0..*" Item : manages
+    Market "1" -- "0..*" Order : receives
+    Customer "1" -- "1" Cart : Possui
+    Cart "1" -- "0..*" Item : contains
+    Customer "1" -- "0..*" Order : places
+    Order "0..*" -- "0..*" Item : contains
 
-    class CartaoCredito {
-        +processarPagamento(double valor)
-    }
-
-    class CartaoDebito {
-        +processarPagamento(double valor)
-    }
-
-    class Boleto {
-        +processarPagamento(double valor)
-    }
-
-    class Pix {
-        +processarPagamento(double valor)
-    }
-
-    class FormaEntrega {
-        <<interface>>
-        +calcularCustoEntrega() : double
-    }
-
-    class Delivery {
-        +calcularCustoEntrega() : double
-    }
-
-    class RetiradaLocal {
-        +calcularCustoEntrega() : double
-    }
-
-    class Mercado {
-        +List~Item~ itensDisponiveis
-        +List~Pedido~ pedidosRecebidos
-        +adicionarItem(Item item)
-        +removerItem(Item item)
-        +List~Item~ getItensDisponiveis() : List~Item~
-        +receberPedido(Pedido pedido)
-        +List~Pedido~ getPedidosRecebidos() : List~Pedido~
-    }
-
-    Usuario --> Carrinho : possui
-    Carrinho "1" --> "n" Item : contém
-    Usuario --> Pedido : realiza
-    Pedido "1" --> "n" Item : contém
-    Pedido --> FormaPagamento : usa
-    Pedido --> FormaEntrega : usa
-    FormaPagamento <|.. CartaoCredito
-    FormaPagamento <|.. CartaoDebito
-    FormaPagamento <|.. Boleto
-    FormaPagamento <|.. Pix
-    FormaEntrega <|.. Delivery
-    FormaEntrega <|.. RetiradaLocal
-    Mercado --> Pedido : recebe
-    Mercado --> Item : gerencia
 ```
