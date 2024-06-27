@@ -20,7 +20,7 @@ public class Cart {
 
     @OneToOne
     @JoinColumn(name = "customer_id")
-    private Customer Customer;
+    private Customer customer;
 
     @ManyToMany
     @JoinTable(
@@ -34,13 +34,12 @@ public class Cart {
     public Cart() {
     }
 
-    public Cart(Long id, com.avendinha.model.Customer customer, List<Item> items, double totoalPrice) {
+    public Cart(Long id, Customer customer, List<Item> items, double totoalPrice) {
         this.id = id;
-        Customer = customer;
+        this.customer = customer;
         this.items = items;
         this.totoalPrice = totoalPrice;
     }
-
 
     public Long getId() {
         return id;
@@ -51,11 +50,11 @@ public class Cart {
     }
 
     public Customer getCustomer() {
-        return Customer;
+        return customer;
     }
 
     public void setCustomer(Customer customer) {
-        Customer = customer;
+        this.customer = customer;
     }
 
     public List<Item> getItems() {

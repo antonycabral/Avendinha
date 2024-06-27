@@ -27,7 +27,7 @@ public class Customer  {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToOne(mappedBy = "customer")
     private Cart cart;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

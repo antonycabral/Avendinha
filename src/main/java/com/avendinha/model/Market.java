@@ -1,7 +1,6 @@
 package com.avendinha.model;
 
 import java.util.List;
-import org.hibernate.cache.spi.support.AbstractReadWriteAccess.Item;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -28,10 +27,10 @@ public class Market {
     private String password;
 
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL)
-    private List <Item> items;
+    private List<Item> items;
 
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL)
-    private List <Order> orders;
+    private List<Order> orders;
 
     
 
