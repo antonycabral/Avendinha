@@ -32,8 +32,6 @@ public class Market {
     @OneToMany(mappedBy = "market", cascade = CascadeType.ALL)
     private List<Order> orders;
 
-    
-
     public Market() {
     }
 
