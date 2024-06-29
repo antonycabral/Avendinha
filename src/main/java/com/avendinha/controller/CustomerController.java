@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @RestController
 @CrossOrigin(origins="*")
 @RequestMapping("/v1/customer")
@@ -15,7 +16,7 @@ public class CustomerController {
 
 @PostMapping()
 public String createCustomer(){
-    return "Create Customer";
+    return "createCustomer";
 }
 
 @GetMapping()

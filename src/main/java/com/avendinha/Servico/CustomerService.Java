@@ -35,7 +35,7 @@ public class CustomerService{
         if (customerRepository.findAll().stream().anyMatch(c -> c.getEmail().equals(customer.getEmail()))) {
             throw new IllegalArgumentException("Email already exists. Please recover your password if you forgot it.");
         }
-        return customerRepository.save(customer);
+        private CustomerRepository CustomerRepository;
     }
 
 }
