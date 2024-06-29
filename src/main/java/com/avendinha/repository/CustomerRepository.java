@@ -1,10 +1,12 @@
 package com.avendinha.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.avendinha.model.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
-    Customer findByEmail(String email);
-    Customer findByCpf(String cpf);
+    Optional<Customer> findByCpf(String cpf);
+    Optional<Customer> findByEmail(String email);
 }

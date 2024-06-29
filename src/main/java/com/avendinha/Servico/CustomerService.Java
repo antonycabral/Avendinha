@@ -25,16 +25,17 @@ public class CustomerService{
         return CustomerRepository.findById(id).get();
     }
 
-    public List<Customer> createCustomer(Customer customer) throws Exception {
-
-        boolean emailOrCpfExists = Stream.of(customer)
-                .anyMatch(c -> CustomerRepository.findByEmail(c.getEmail()) != null || CustomerRepository.findByCpf(c.getCpf()) != null);
-    
-        if (emailOrCpfExists) {
-            throw new Exception("Email ou CPF já cadastrado.");
+    @Transactional
+    public Customer createCustomer(Customer customer) {
+        // Verifica se o CPF já está cadastrado
+        if (customerRepository.findByCpf(customer.getCpf()).isPresent()) {
+            throw new IllegalArgumentException("CPF already exists. Please recover your password if you forgot it.");
         }
-    
-        return Collections.singletonList(CustomerRepository.save(customer));
+        // Verifica se o e-mail já está cadastrado
+        if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already exists. Please recover your password if you forgot it.");
+        }
+        return customerRepository.save(customer);
     }
 
 }
