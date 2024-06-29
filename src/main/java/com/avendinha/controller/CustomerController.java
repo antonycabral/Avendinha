@@ -23,14 +23,13 @@ public String Customer(){
     return "Customer deleted"; 
 }
 
-@DeleteMapping()
-public String deleteCustomer(){
-    return "deleteCustomer";
-}
-
 @PutMapping()
 public String updateCustomer(){
     return "updateCustomer";
+}
 
+@DeleteMapping()
+public String deleteCustomer(){
+    return "deleteCustomer";
 }
 }

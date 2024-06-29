@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/market")
 public class MarketController {
     
-    //Rea//
+    //Read//
     @GetMapping()
     public String market(){
         return "Market";

@@ -2,7 +2,6 @@ package com.avendinha.model;
 
 import java.util.List;
 
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,10 +21,12 @@ public class Customer  {
 
     @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
     @Column(nullable = false)
     private String password;
+    @Column(nullable = false, unique = true)
+    private String cpf;
 
     @OneToOne(mappedBy = "customer")
     private Cart cart;
@@ -36,12 +37,13 @@ public class Customer  {
     public Customer() {
     }
 
-    public Customer(Long id, String name, String email, String password, Cart cart) {
+    public Customer(Long id, String name, String email, String password, Cart cart, String cpf) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;
         this.cart = cart;
+        this.cpf = cpf;
     }
 
     public Long getId() {
@@ -84,12 +86,24 @@ public class Customer  {
         this.cart = cart;
     }
 
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public void getCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
     public List<Order> getOrders() {
         return orders;
     }
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public String getCpf() {
+        return this.cpf;
     }
 
     
