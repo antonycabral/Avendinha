@@ -28,11 +28,11 @@ public class CustomerService{
     @Transactional
     public Customer createCustomer(Customer customer) {
         // Verifica se o CPF já está cadastrado
-        if (customerRepository.findByCpf(customer.getCpf()).isPresent()) {
+        if (customerRepository.findAll().stream().anyMatch(c -> c.getCpf().equals(customer.getCpf()))) {
             throw new IllegalArgumentException("CPF already exists. Please recover your password if you forgot it.");
         }
         // Verifica se o e-mail já está cadastrado
-        if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
+        if (customerRepository.findAll().stream().anyMatch(c -> c.getEmail().equals(customer.getEmail()))) {
             throw new IllegalArgumentException("Email already exists. Please recover your password if you forgot it.");
         }
         return customerRepository.save(customer);
