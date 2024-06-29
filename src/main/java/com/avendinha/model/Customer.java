@@ -106,6 +106,4 @@ public class Customer  {
         return this.cpf;
     }
 
-    
-
 }
