@@ -2,62 +2,90 @@ package com.avendinha.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.avendinha.DTO.CustomerDTO;
 import com.avendinha.model.Customer;
 import com.avendinha.repository.CustomerRepository;
 
 @Service
 public class CustomerService {
 
-    private final CustomerRepository customerRepository;
-
     @Autowired
-    public CustomerService(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    private CustomerRepository customerRepository;
+
+    @Transactional(readOnly = true)
+    public List<CustomerDTO> getAllCustomers() {
+        List<Customer> customers = customerRepository.findAll();
+        List<CustomerDTO> customerDTOs = customers.stream().map(customer -> convertToDTO(customer)).collect(Collectors.toList());
+        return customerDTOs;
     }
 
     @Transactional(readOnly = true)
-    public List<Customer> getAllCustomers() {
-        return customerRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public Optional<Customer> getCustomerById(Long id) {
-        return customerRepository.findById(id);
+    public Optional<CustomerDTO> getCustomerById(Long id) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        if (customerOptional.isPresent()) {
+            CustomerDTO customerDTO = convertToDTO(customerOptional.get());
+            return Optional.of(customerDTO);
+        }
+        return Optional.empty();
     }
 
     @Transactional
-    public Customer createCustomer(Customer customer) {
+    public CustomerDTO createCustomer(CustomerDTO customerCreateDTO) {
         // Verifica se o CPF já está cadastrado
-        if (customerRepository.findAll().stream().anyMatch(c -> c.getCpf().equals(customer.getCpf()))) {
-            throw new IllegalArgumentException("CPF already exists. Please recover your password if you forgot it.");
+        if (customerRepository.existsByCpf(customerCreateDTO.getCpf())) {
+            throw new IllegalArgumentException("CPF já está cadastrado. Por favor, recupere sua senha se esqueceu.");
         }
         // Verifica se o e-mail já está cadastrado
-        if (customerRepository.findAll().stream().anyMatch(c -> c.getEmail().equals(customer.getEmail()))) {
-            throw new IllegalArgumentException("Email already exists. Please recover your password if you forgot it.");
+        if (customerRepository.existsByEmail(customerCreateDTO.getEmail())) {
+            throw new IllegalArgumentException("Email já está cadastrado. Por favor, recupere sua senha se esqueceu.");
         }
-        return customerRepository.save(customer);
+
+        Customer customer = new Customer();
+        customer.setName(customerCreateDTO.getName());
+        customer.setEmail(customerCreateDTO.getEmail());
+        customer.setPassword(customerCreateDTO.getPassword());
+        customer.setCpf(customerCreateDTO.getCpf());
+
+        Customer savedCustomer = customerRepository.save(customer);
+        CustomerDTO customerDTO = convertToDTO(savedCustomer);
+        return customerDTO;
     }
 
     @Transactional
-    public Customer updateCustomer(Long id, Customer customer) {
-        return customerRepository.findById(id)
-                .map(existingCustomer -> {
-                    existingCustomer.setName(customer.getName());
-                    existingCustomer.setEmail(customer.getEmail());
-                    existingCustomer.setPassword(customer.getPassword());
-                    existingCustomer.setCpf(customer.getCpf());
-                    return customerRepository.save(existingCustomer);
-                })
-                .orElseThrow(() -> new IllegalArgumentException("Customer not found with id: " + id));
+    public CustomerDTO updateCustomer(Long id, CustomerDTO customerDTO) {
+        Optional<Customer> customerOptional = customerRepository.findById(id);
+        if (customerOptional.isPresent()) {
+            Customer existingCustomer = customerOptional.get();
+            existingCustomer.setName(customerDTO.getName());
+            existingCustomer.setEmail(customerDTO.getEmail());
+            existingCustomer.setPassword(customerDTO.getPassword());
+            existingCustomer.setCpf(customerDTO.getCpf());
+
+            Customer updatedCustomer = customerRepository.save(existingCustomer);
+            CustomerDTO updatedCustomerDTO = convertToDTO(updatedCustomer);
+            return updatedCustomerDTO;
+        } else {
+            throw new IllegalArgumentException("Cliente não encontrado por ID: " + id);
+        }
     }
 
     @Transactional
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    private CustomerDTO convertToDTO(Customer customer) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setId(customer.getId());
+        customerDTO.setName(customer.getName());
+        customerDTO.setEmail(customer.getEmail());
+        customerDTO.setCpf(customer.getCpf());
+        return customerDTO;
     }
 }
