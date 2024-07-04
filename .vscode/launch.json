@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-AvendinhaApplication<vendinha>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.avendinha.AvendinhaApplication",
+            "projectName": "vendinha",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
